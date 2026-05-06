@@ -758,102 +758,190 @@ docker network prune
 
 ---
 
-# 18. Docker Compose
+# Docker Compose — Complete Easy Understanding
 
-## Problem Without Compose
+---
 
-Too many commands:
+# 1. What is Docker Compose?
+
+Docker Compose is a tool used to manage and run:
+
+```text
+Multiple Docker containers together
+```
+
+using a single file:
+
+```text
+docker-compose.yml
+```
+
+---
+
+# 2. Why Docker Compose is Needed
+
+Without Docker Compose, suppose your project has:
+
+- Node.js backend
+- MongoDB database
+
+You must manually run many commands:
 
 ```bash
-docker build
-docker network create
-docker run
-docker run
+docker network create zomato-network
+
+docker run -d \
+--name mongo \
+--network zomato-network \
+mongo
+
+docker build -t zomato:v1 .
+
+docker run -d \
+--name zomato-app \
+--network zomato-network \
+-p 3000:3000 \
+zomato:v1
 ```
 
-Messy for real projects.
+This becomes:
+- Hard to manage
+- Too many commands
+- Difficult in real projects
 
 ---
 
-# Solution
+# 3. Docker Compose Solution
 
-Docker Compose.
+Instead of many commands:
 
----
+👉 Put everything inside ONE file.
 
-# What is Docker Compose?
-
-Tool used to manage:
-
-```text
-Multiple containers together
-```
-
-using:
+File name:
 
 ```text
 docker-compose.yml
 ```
 
----
+Then run:
 
-# Is Compose a Network?
+```bash
+docker-compose up
+```
 
-NO.
-
-Compose:
+Docker Compose automatically:
+- Builds images
+- Pulls images
 - Creates containers
-- Creates networks automatically
+- Creates network
 - Connects containers
+- Starts everything
 
 ---
 
-# 19. Why YAML File?
+# 4. Is Docker Compose a Network?
 
-YAML:
+❌ NO
+
+Docker Compose is NOT a network.
+
+---
+
+# Docker Compose does:
+
+- Manage multiple containers
+- Create network automatically
+- Connect containers automatically
+
+---
+
+# Docker Network does:
 
 ```text
-Configuration file format
-```
-
-Used heavily in:
-- Docker Compose
-- Kubernetes
-- CI/CD
-
----
-
-# Why YAML?
-
-Because:
-- Easy to read
-- Structured
-- Human friendly
-
----
-
-# Example YAML
-
-```yaml
-name: Sufiyan
-skills:
-  - Docker
-  - Node.js
+Communication between containers
 ```
 
 ---
 
-# 20. docker-compose.yml Example
+# 5. Real-World Example
 
-Create:
+Suppose project:
+
+```text
+zomato/
+ ├── app.js
+ ├── package.json
+ ├── Dockerfile
+ └── docker-compose.yml
+```
+
+---
+
+# 6. Step-by-Step Full Flow
+
+---
+
+# STEP 1 — Existing Node.js Project
+
+Suppose your backend already exists:
+
+```text
+app.js
+package.json
+```
+
+---
+
+# STEP 2 — Create Dockerfile
+
+Create file:
+
+```text
+Dockerfile
+```
+
+Write:
+
+```dockerfile
+FROM node:18
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+EXPOSE 3000
+
+CMD ["node", "app.js"]
+```
+
+---
+
+# What this Dockerfile does
+
+| Instruction | Meaning |
+|---|---|
+| FROM node:18 | Use Node.js base image |
+| WORKDIR /app | Create working directory |
+| COPY | Copy files |
+| RUN npm install | Install dependencies |
+| EXPOSE 3000 | App runs on port 3000 |
+| CMD | Start application |
+
+---
+
+# STEP 3 — Create docker-compose.yml
+
+Create file:
 
 ```text
 docker-compose.yml
 ```
 
----
-
-# Write
+Write:
 
 ```yaml
 version: "3"
@@ -875,9 +963,41 @@ services:
 
 ---
 
-# Meaning
+# 7. Understanding docker-compose.yml
 
-## app Service
+---
+
+# version
+
+```yaml
+version: "3"
+```
+
+Docker Compose file format version.
+
+---
+
+# services
+
+```yaml
+services:
+```
+
+Defines all containers/services.
+
+---
+
+# app Service
+
+```yaml
+app:
+```
+
+Node.js container.
+
+---
+
+# build: .
 
 ```yaml
 build: .
@@ -889,9 +1009,54 @@ Meaning:
 Build image using Dockerfile in current folder
 ```
 
+Equivalent to:
+
+```bash
+docker build -t app-image .
+```
+
 ---
 
-## mongo Service
+# container_name
+
+```yaml
+container_name: zomato-app
+```
+
+Container name becomes:
+
+```text
+zomato-app
+```
+
+---
+
+# ports
+
+```yaml
+ports:
+  - "3000:3000"
+```
+
+Meaning:
+
+```text
+Host port 3000 → container port 3000
+```
+
+---
+
+# mongo Service
+
+```yaml
+mongo:
+```
+
+MongoDB container.
+
+---
+
+# image: mongo
 
 ```yaml
 image: mongo
@@ -900,36 +1065,20 @@ image: mongo
 Meaning:
 
 ```text
-Pull official MongoDB image
+Pull official MongoDB image from Docker Hub
 ```
 
----
-
-# 21. Run Compose
-
-Command:
+Equivalent to:
 
 ```bash
-docker-compose up
+docker pull mongo
 ```
 
 ---
 
-# What Happens Internally
+# 8. VERY IMPORTANT — Network Understanding
 
-Compose automatically:
-
-- Builds app image
-- Pulls MongoDB image
-- Creates network
-- Starts containers
-- Connects containers
-
----
-
-# Important Network Understanding
-
-Even though no network written:
+You may notice:
 
 ```yaml
 services:
@@ -937,7 +1086,13 @@ services:
   mongo:
 ```
 
-Compose automatically creates:
+No network written.
+
+---
+
+# Then how do containers communicate?
+
+Because Docker Compose automatically creates:
 
 ```text
 default network
@@ -949,13 +1104,193 @@ Example:
 zomato_default
 ```
 
+Both containers automatically join same network.
+
 ---
 
-# Verify
+# Verify Network
+
+Run:
 
 ```bash
 docker network ls
 ```
+
+You’ll see:
+
+```text
+zomato_default
+```
+
+---
+
+# 9. How Node.js connects to MongoDB
+
+Inside app.js:
+
+```js
+mongodb://mongo:27017
+```
+
+---
+
+# Why "mongo"?
+
+Because:
+
+```text
+mongo = service/container name
+```
+
+Docker Compose provides automatic DNS resolution.
+
+---
+
+# 10. Run Everything
+
+Run:
+
+```bash
+docker-compose up
+```
+
+---
+
+# What happens internally?
+
+Docker Compose automatically:
+
+✅ Builds Node.js image  
+✅ Pulls MongoDB image  
+✅ Creates containers  
+✅ Creates network  
+✅ Connects containers  
+✅ Starts application  
+
+---
+
+# 11. Final Architecture
+
+```text
+Browser
+   ↓
+localhost:3000
+   ↓
+Node.js Container
+   ↓
+MongoDB Container
+```
+
+Connected using:
+
+```text
+Docker Network
+```
+
+Automatically created by Docker Compose.
+
+---
+
+# 12. Stop Everything
+
+```bash
+docker-compose down
+```
+
+Stops:
+- Containers
+- Network
+
+---
+
+# 13. Run in Background
+
+```bash
+docker-compose up -d
+```
+
+Equivalent to:
+```text
+Detached mode
+```
+
+---
+
+# 14. View Logs
+
+```bash
+docker-compose logs
+```
+
+Live logs:
+
+```bash
+docker-compose logs -f
+```
+
+---
+
+# 15. Why Companies Use Docker Compose
+
+Because it:
+- Simplifies multi-container setup
+- Centralizes configuration
+- Improves local development
+- Reduces manual commands
+
+Used heavily for:
+- Backend development
+- Microservices
+- Local testing
+- CI/CD pipelines
+
+---
+
+# 16. Compose vs Manual Docker
+
+| Without Compose | With Compose |
+|---|---|
+| Many commands | One file |
+| Manual network creation | Automatic |
+| Manual container startup | Automatic |
+| Hard to manage | Easy |
+| Difficult scaling | Easier |
+
+---
+
+# 17. Final Mental Model
+
+```text
+Docker Compose
+      ↓
+Reads docker-compose.yml
+      ↓
+Creates network automatically
+      ↓
+Starts all containers
+      ↓
+Connects containers together
+```
+
+---
+
+# 18. Most Important Understanding
+
+```text
+Docker Network
+    ↓
+Container communication
+
+Docker Compose
+    ↓
+Container management/orchestration
+```
+
+---
+
+# 19. One-Line Interview Answer
+
+Docker Compose is a tool used to define and manage multi-container Docker applications using a YAML configuration file.
 
 ---
 
