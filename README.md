@@ -1,12 +1,17 @@
-# 🚀 Docker Complete Notes 
+# 🚀 Docker Complete Notes (Beginner → 2+ Year SDE)
 
 ---
 
-# 1. What is Docker?
+# 📌 What is Docker?
 
-Docker is a platform used to package applications along with all dependencies into isolated environments called **containers**.
+Docker is a containerization platform used to package applications along with all their dependencies into isolated environments called **containers**.
 
-## Main Goal
+The main purpose of Docker is to ensure that applications behave consistently across:
+- Developer machines
+- Testing servers
+- Production environments
+
+In simple terms:
 
 ```text
 Build once, run anywhere
@@ -14,30 +19,29 @@ Build once, run anywhere
 
 ---
 
-# 2. Why Docker is Needed
+# 🤔 Why Docker is Needed
 
 ## Problem Without Docker
 
-Application works:
-- On developer machine
-- But fails on teammate/server
+In real-world projects, applications often work on a developer machine but fail on another system.
 
-Reasons:
-- Different Node versions
+Common reasons include:
+- Different Node.js versions
 - Missing dependencies
-- Different OS configurations
+- Different operating systems
+- Different environment configurations
 
 Example:
 
 ```text
-Developer → Node 18
-Production → Node 16
+Developer Machine → Node.js 18
+Production Server → Node.js 16
 ```
 
 Result:
 
 ```text
-Application crash
+Application crash or unexpected behavior
 ```
 
 ---
@@ -45,14 +49,14 @@ Application crash
 ## Docker Solution
 
 Docker packages:
-- Code
+- Application code
 - Runtime
 - Dependencies
-- Configurations
+- Environment configuration
 
 inside one isolated environment.
 
-Result:
+This ensures:
 
 ```text
 Same behavior everywhere
@@ -60,31 +64,36 @@ Same behavior everywhere
 
 ---
 
-# 3. Core Docker Concepts
+# 🧱 Core Docker Concepts
 
 ---
 
-# IMAGE
+## 📦 Docker Image
 
-An image is:
-- Blueprint/template
-- Read-only package
-- Contains everything needed to run app
+A Docker image is a **blueprint/template** used to create containers.
 
-Example:
-- Node.js runtime
-- App code
+An image contains:
+- Application code
+- Runtime
 - Dependencies
+- Required libraries
 
----
-
-# CONTAINER
-
-Container is:
+Think of it like:
 
 ```text
-Running instance of image
+Image = Blueprint
 ```
+
+Example:
+- Node.js image
+- MongoDB image
+- Nginx image
+
+---
+
+## 📦 Docker Container
+
+A container is a **running instance** of an image.
 
 Think:
 
@@ -93,11 +102,13 @@ Image = Class
 Container = Object
 ```
 
+Containers are isolated environments where applications run.
+
 ---
 
-# DOCKERFILE
+## 📝 Dockerfile
 
-A file containing instructions to build image.
+A Dockerfile is a file containing instructions used to build a Docker image.
 
 Example:
 
@@ -119,39 +130,42 @@ CMD ["node", "app.js"]
 
 ---
 
-# FLOW
+# 🔄 Docker Workflow
 
 ```text
 Dockerfile
     ↓
 docker build
     ↓
-Image
+Docker Image
     ↓
 docker run
     ↓
-Container
+Running Container
 ```
 
 ---
 
-# 4. docker build
+# 🛠 docker build
 
-Command:
+## Command
 
 ```bash
 docker build -t zomato:v1 .
 ```
 
-## What It Does
+---
 
-- Reads Dockerfile
+## What This Command Does
+
+This command:
+- Reads the Dockerfile
 - Executes instructions
-- Creates image locally
+- Creates a Docker image locally
 
 ---
 
-# Meaning of -t
+## Understanding `-t`
 
 ```text
 -t = tag
@@ -164,27 +178,24 @@ docker build -t zomato:v1 .
 ```
 
 Here:
-
-```text
-zomato = image name
-v1 = version/tag
-```
+- `zomato` → image name
+- `v1` → version/tag
 
 ---
 
-# Important
+## Important Understanding
 
-`docker build` does NOT create container.
+`docker build` does NOT create a container.
 
 It only creates:
 
 ```text
-IMAGE
+Docker Image
 ```
 
 ---
 
-# 5. Does docker build Download Images?
+# 📥 Does docker build Download Images?
 
 YES.
 
@@ -194,34 +205,31 @@ Example:
 FROM node:18
 ```
 
-Docker checks:
-- Is node:18 already available locally?
+Docker first checks:
+- Is `node:18` already available locally?
 
-If NO:
-
-```text
-Automatically pulls image
-```
+If NOT:
+- Docker automatically pulls the image from Docker Hub.
 
 ---
 
-# 6. docker pull
+# 📥 docker pull
 
-Command:
+## Command
 
 ```bash
 docker pull nginx
 ```
 
-Purpose:
+---
 
-```text
-Download existing image from Docker Hub
-```
+## Purpose
+
+Downloads an existing image from Docker Hub.
 
 ---
 
-# Difference
+## Difference Between build and pull
 
 | Command | Purpose |
 |---|---|
@@ -230,7 +238,7 @@ Download existing image from Docker Hub
 
 ---
 
-# Simple Analogy
+## Simple Analogy
 
 ```text
 docker build = cooking food
@@ -239,30 +247,30 @@ docker pull = ordering food
 
 ---
 
-# 7. docker run
+# ▶️ docker run
 
-Command:
+## Command
 
 ```bash
 docker run zomato:v1
 ```
 
-Purpose:
+---
 
-```text
-Create and start container
-```
+## Purpose
+
+Creates and starts a Docker container.
 
 ---
 
-# Flow Again
+# 🔄 Workflow Again
 
 ```text
 Dockerfile
     ↓
 docker build
     ↓
-Image
+Docker Image
     ↓
 docker run
     ↓
@@ -271,13 +279,15 @@ Container
 
 ---
 
-# 8. docker run -d
+# 🔙 docker run -d
 
-Command:
+## Command
 
 ```bash
 docker run -d zomato:v1
 ```
+
+---
 
 ## Meaning
 
@@ -285,43 +295,43 @@ docker run -d zomato:v1
 -d = detached mode
 ```
 
-Runs container in:
-
-```text
-BACKGROUND
-```
+This runs the container in the background.
 
 ---
 
-# Without -d
+## Without `-d`
 
-Terminal gets blocked.
-
----
-
-# With -d
-
-Container runs silently in background.
+- Terminal gets blocked
+- Logs continuously appear
 
 ---
 
-# Example
+## With `-d`
+
+- Container runs silently in background
+- Terminal becomes free
+
+---
+
+## Example
 
 ```bash
 docker run -d mongo
 ```
 
-MongoDB runs in background.
+MongoDB now runs in the background.
 
 ---
 
-# 9. Port Binding
+# 🌐 Port Binding
 
-Command:
+## Command
 
 ```bash
 docker run -p 3000:3000 zomato:v1
 ```
+
+---
 
 ## Meaning
 
@@ -331,7 +341,7 @@ host_port:container_port
 
 ---
 
-# Flow
+# 🔄 Request Flow
 
 ```text
 Browser
@@ -343,40 +353,43 @@ container:3000
 
 ---
 
-# Example
+## Another Example
 
 ```bash
 docker run -p 8080:3000 zomato:v1
 ```
 
-Access:
+Now:
 
 ```text
 localhost:8080
 ```
 
-Inside container app still runs on:
+maps to:
 
 ```text
-3000
+container:3000
 ```
 
 ---
 
-# 10. Environment Variables (-e)
+# 🔐 Environment Variables (-e)
 
-Command:
+## Command
 
 ```bash
 docker run -e PORT=3000 zomato:v1
 ```
 
-Purpose:
-Pass runtime configuration into container.
+---
+
+## Purpose
+
+Pass runtime configuration into the container.
 
 ---
 
-# Node.js Example
+## Node.js Example
 
 ```js
 const port = process.env.PORT;
@@ -384,19 +397,19 @@ const port = process.env.PORT;
 
 ---
 
-# How It Works
+# 🔄 How Environment Variables Work
 
 ```text
 docker run -e KEY=value
         ↓
-Docker injects env variable
+Docker injects environment variable
         ↓
 Node.js reads using process.env
 ```
 
 ---
 
-# Example
+## Example
 
 ```bash
 docker run \
@@ -407,7 +420,7 @@ zomato:v1
 
 ---
 
-# Inside App
+## Inside Application
 
 ```js
 process.env.PORT
@@ -416,9 +429,9 @@ process.env.DB_URL
 
 ---
 
-# 11. docker ps
+# 📋 docker ps
 
-Command:
+## Command
 
 ```bash
 docker ps
@@ -432,33 +445,32 @@ Only running containers
 
 ---
 
-# docker ps -a
+# 📋 docker ps -a
 
-Command:
+## Command
 
 ```bash
 docker ps -a
 ```
 
 Shows:
-
-```text
-All containers
-Running + stopped
-```
+- Running containers
+- Stopped containers
 
 ---
 
-# Difference
+## Difference
 
-| Command | Shows |
+| Command | Purpose |
 |---|---|
-| docker ps | Running containers |
+| docker ps | Running containers only |
 | docker ps -a | All containers |
 
 ---
 
-# 12. ps -aef vs docker ps
+# ⚙️ ps -aef vs docker ps
+
+---
 
 ## ps -aef
 
@@ -467,7 +479,7 @@ Linux OS command.
 Shows:
 
 ```text
-All system processes
+All operating system processes
 ```
 
 ---
@@ -484,29 +496,29 @@ Docker containers
 
 ---
 
-# 13. docker logs
+# 📜 docker logs
 
-Command:
+## Command
 
 ```bash
 docker logs zomato-app
 ```
 
-Purpose:
+---
 
-```text
-View application logs/output
-```
+## Purpose
+
+Shows application logs/output from container.
 
 ---
 
-# Example
+## Example
 
 ```js
 console.log("Server started");
 ```
 
-Visible via:
+Visible using:
 
 ```bash
 docker logs zomato-app
@@ -514,7 +526,7 @@ docker logs zomato-app
 
 ---
 
-# Live Logs
+## Live Logs
 
 ```bash
 docker logs -f zomato-app
@@ -522,60 +534,60 @@ docker logs -f zomato-app
 
 ---
 
-# 14. docker inspect
+# 🔍 docker inspect
 
-Command:
+## Command
 
 ```bash
 docker inspect zomato-app
 ```
 
-Purpose:
+---
 
-```text
-Detailed container metadata/configuration
-```
+## Purpose
+
+Provides detailed metadata/configuration of container.
 
 ---
 
-# Shows
+## Information Shown
 
 - IP address
 - Environment variables
 - Port mappings
-- Network details
 - Volumes
+- Network configuration
 
 ---
 
-# 15. docker exec -it
+# 🖥 docker exec -it
 
-Command:
+## Command
 
 ```bash
 docker exec -it zomato-app /bin/bash
 ```
 
-Purpose:
+---
 
-```text
-Enter inside running container
-```
+## Purpose
+
+Allows entering inside a running container interactively.
 
 ---
 
-# Meaning
+## Meaning
 
 | Flag | Purpose |
 |---|---|
-| -i | Interactive |
+| -i | Interactive mode |
 | -t | Terminal |
 
 ---
 
-# Inside Container
+## Inside Container
 
-You can run:
+You can run commands like:
 
 ```bash
 ls
@@ -585,27 +597,29 @@ env
 
 ---
 
-# 16. Docker Volumes
+# 💾 Docker Volumes
+
+---
 
 ## Problem
 
 Containers are temporary.
 
-If MongoDB container gets deleted:
+If a MongoDB container gets deleted:
 
 ```text
-Data also deleted
+Database data also gets deleted
 ```
 
 ---
 
-# Solution
+## Solution
 
-Volumes store data outside container.
+Docker volumes store data outside the container lifecycle.
 
 ---
 
-# Example
+## Example
 
 ```bash
 docker run -v mongo-data:/data/db mongo
@@ -613,7 +627,7 @@ docker run -v mongo-data:/data/db mongo
 
 ---
 
-# Meaning
+## Understanding Volume Mapping
 
 | Part | Meaning |
 |---|---|
@@ -622,19 +636,19 @@ docker run -v mongo-data:/data/db mongo
 
 ---
 
-# Flow
+# 🔄 Volume Flow
 
 ```text
 Container writes data
         ↓
-Volume stores data
+Docker Volume stores data
         ↓
 Data survives container deletion
 ```
 
 ---
 
-# Volume Use Cases
+# 📌 Volume Use Cases
 
 - Databases
 - Logs
@@ -643,7 +657,7 @@ Data survives container deletion
 
 ---
 
-# Development Example
+## Development Example
 
 ```bash
 docker run -v $(pwd):/app zomato:v1
@@ -651,7 +665,7 @@ docker run -v $(pwd):/app zomato:v1
 
 ---
 
-# Meaning
+## Meaning
 
 ```text
 Local folder ↔ container folder sync
@@ -659,17 +673,11 @@ Local folder ↔ container folder sync
 
 ---
 
-# 17. Docker Network
+# 🌐 Docker Network
 
-Purpose:
+Docker networks allow containers to communicate with each other securely.
 
-```text
-Allow communication between containers
-```
-
----
-
-# Example
+Example:
 
 ```text
 Node.js Container ↔ MongoDB Container
@@ -677,7 +685,7 @@ Node.js Container ↔ MongoDB Container
 
 ---
 
-# Create Network
+# 🛠 Create Network
 
 ```bash
 docker network create zomato-network
@@ -685,7 +693,7 @@ docker network create zomato-network
 
 ---
 
-# Run MongoDB
+# ▶️ Run MongoDB Container
 
 ```bash
 docker run -d \
@@ -696,7 +704,7 @@ mongo
 
 ---
 
-# Run Node App
+# ▶️ Run Node.js Container
 
 ```bash
 docker run -d \
@@ -708,9 +716,9 @@ zomato:v1
 
 ---
 
-# Database URL
+# 🔗 Database Connection URL
 
-Inside Node app:
+Inside Node.js app:
 
 ```js
 mongodb://mongo:27017
@@ -718,7 +726,7 @@ mongodb://mongo:27017
 
 ---
 
-# Why mongo?
+## Why `mongo`?
 
 Because:
 
@@ -726,11 +734,11 @@ Because:
 mongo = container name
 ```
 
-Docker network resolves it automatically.
+Docker network automatically resolves container names.
 
 ---
 
-# Network Commands
+# 📋 Network Commands
 
 ## List Networks
 
@@ -738,17 +746,23 @@ Docker network resolves it automatically.
 docker network ls
 ```
 
+---
+
 ## Create Network
 
 ```bash
 docker network create my-network
 ```
 
+---
+
 ## Remove Network
 
 ```bash
 docker network rm my-network
 ```
+
+---
 
 ## Remove Unused Networks
 
@@ -758,34 +772,17 @@ docker network prune
 
 ---
 
-# Docker Compose — Complete Easy Understanding
+# 🧩 Docker Compose
 
 ---
 
-# 1. What is Docker Compose?
+# 🤔 Why Docker Compose is Needed
 
-Docker Compose is a tool used to manage and run:
-
-```text
-Multiple Docker containers together
-```
-
-using a single file:
-
-```text
-docker-compose.yml
-```
-
----
-
-# 2. Why Docker Compose is Needed
-
-Without Docker Compose, suppose your project has:
-
+Suppose your project contains:
 - Node.js backend
 - MongoDB database
 
-You must manually run many commands:
+Without Docker Compose, you must manually execute many commands:
 
 ```bash
 docker network create zomato-network
@@ -806,56 +803,48 @@ zomato:v1
 
 This becomes:
 - Hard to manage
-- Too many commands
-- Difficult in real projects
+- Repetitive
+- Difficult in large projects
 
 ---
 
-# 3. Docker Compose Solution
+# ✅ Docker Compose Solution
 
-Instead of many commands:
-
-👉 Put everything inside ONE file.
-
-File name:
+Docker Compose allows managing multiple containers using a single YAML file:
 
 ```text
 docker-compose.yml
 ```
 
-Then run:
+Then everything runs using:
 
 ```bash
 docker-compose up
 ```
 
-Docker Compose automatically:
-- Builds images
-- Pulls images
-- Creates containers
-- Creates network
-- Connects containers
-- Starts everything
-
 ---
 
-# 4. Is Docker Compose a Network?
+# ⚠️ Is Docker Compose a Network?
 
-❌ NO
+NO.
 
 Docker Compose is NOT a network.
 
 ---
 
-# Docker Compose does:
+# 📌 Docker Compose Responsibilities
 
-- Manage multiple containers
-- Create network automatically
-- Connect containers automatically
+Docker Compose:
+- Creates containers
+- Builds images
+- Creates networks automatically
+- Connects containers automatically
 
 ---
 
-# Docker Network does:
+# 📌 Docker Network Responsibility
+
+Docker Network handles:
 
 ```text
 Communication between containers
@@ -863,9 +852,7 @@ Communication between containers
 
 ---
 
-# 5. Real-World Example
-
-Suppose project:
+# 📁 Real-World Project Structure
 
 ```text
 zomato/
@@ -877,7 +864,7 @@ zomato/
 
 ---
 
-# 6. Step-by-Step Full Flow
+# 🚀 Full Docker Compose Flow
 
 ---
 
@@ -894,7 +881,7 @@ package.json
 
 # STEP 2 — Create Dockerfile
 
-Create file:
+Create:
 
 ```text
 Dockerfile
@@ -920,7 +907,7 @@ CMD ["node", "app.js"]
 
 ---
 
-# What this Dockerfile does
+# 📌 Dockerfile Explanation
 
 | Instruction | Meaning |
 |---|---|
@@ -928,14 +915,14 @@ CMD ["node", "app.js"]
 | WORKDIR /app | Create working directory |
 | COPY | Copy files |
 | RUN npm install | Install dependencies |
-| EXPOSE 3000 | App runs on port 3000 |
+| EXPOSE 3000 | Application runs on port 3000 |
 | CMD | Start application |
 
 ---
 
 # STEP 3 — Create docker-compose.yml
 
-Create file:
+Create:
 
 ```text
 docker-compose.yml
@@ -963,11 +950,11 @@ services:
 
 ---
 
-# 7. Understanding docker-compose.yml
+# 📖 Understanding docker-compose.yml
 
 ---
 
-# version
+## version
 
 ```yaml
 version: "3"
@@ -977,7 +964,7 @@ Docker Compose file format version.
 
 ---
 
-# services
+## services
 
 ```yaml
 services:
@@ -987,17 +974,13 @@ Defines all containers/services.
 
 ---
 
-# app Service
+## app Service
 
-```yaml
-app:
-```
-
-Node.js container.
+Represents Node.js application container.
 
 ---
 
-# build: .
+## build: .
 
 ```yaml
 build: .
@@ -1006,7 +989,7 @@ build: .
 Meaning:
 
 ```text
-Build image using Dockerfile in current folder
+Build image using Dockerfile from current folder
 ```
 
 Equivalent to:
@@ -1017,7 +1000,7 @@ docker build -t app-image .
 
 ---
 
-# container_name
+## container_name
 
 ```yaml
 container_name: zomato-app
@@ -1031,7 +1014,7 @@ zomato-app
 
 ---
 
-# ports
+## ports
 
 ```yaml
 ports:
@@ -1046,17 +1029,13 @@ Host port 3000 → container port 3000
 
 ---
 
-# mongo Service
+## mongo Service
 
-```yaml
-mongo:
-```
-
-MongoDB container.
+Represents MongoDB container.
 
 ---
 
-# image: mongo
+## image: mongo
 
 ```yaml
 image: mongo
@@ -1076,9 +1055,9 @@ docker pull mongo
 
 ---
 
-# 8. VERY IMPORTANT — Network Understanding
+# 🌐 Automatic Network Creation
 
-You may notice:
+Even if you do not define a network manually:
 
 ```yaml
 services:
@@ -1086,17 +1065,7 @@ services:
   mongo:
 ```
 
-No network written.
-
----
-
-# Then how do containers communicate?
-
-Because Docker Compose automatically creates:
-
-```text
-default network
-```
+Docker Compose automatically creates a default network.
 
 Example:
 
@@ -1104,27 +1073,19 @@ Example:
 zomato_default
 ```
 
-Both containers automatically join same network.
+Both containers automatically join this network.
 
 ---
 
-# Verify Network
-
-Run:
+# 🔍 Verify Network
 
 ```bash
 docker network ls
 ```
 
-You’ll see:
-
-```text
-zomato_default
-```
-
 ---
 
-# 9. How Node.js connects to MongoDB
+# 🔗 Node.js to MongoDB Connection
 
 Inside app.js:
 
@@ -1134,7 +1095,7 @@ mongodb://mongo:27017
 
 ---
 
-# Why "mongo"?
+## Why `mongo`?
 
 Because:
 
@@ -1142,13 +1103,11 @@ Because:
 mongo = service/container name
 ```
 
-Docker Compose provides automatic DNS resolution.
+Docker Compose automatically provides DNS resolution.
 
 ---
 
-# 10. Run Everything
-
-Run:
+# ▶️ Run Everything
 
 ```bash
 docker-compose up
@@ -1156,7 +1115,7 @@ docker-compose up
 
 ---
 
-# What happens internally?
+# ⚙️ What Happens Internally?
 
 Docker Compose automatically:
 
@@ -1169,7 +1128,7 @@ Docker Compose automatically:
 
 ---
 
-# 11. Final Architecture
+# 🏗 Final Architecture
 
 ```text
 Browser
@@ -1181,17 +1140,11 @@ Node.js Container
 MongoDB Container
 ```
 
-Connected using:
-
-```text
-Docker Network
-```
-
-Automatically created by Docker Compose.
+Connected using Docker Network.
 
 ---
 
-# 12. Stop Everything
+# ⛔ Stop Everything
 
 ```bash
 docker-compose down
@@ -1199,24 +1152,21 @@ docker-compose down
 
 Stops:
 - Containers
-- Network
+- Networks
 
 ---
 
-# 13. Run in Background
+# 🔙 Run in Background
 
 ```bash
 docker-compose up -d
 ```
 
-Equivalent to:
-```text
-Detached mode
-```
+Equivalent to detached mode.
 
 ---
 
-# 14. View Logs
+# 📜 View Logs
 
 ```bash
 docker-compose logs
@@ -1230,13 +1180,13 @@ docker-compose logs -f
 
 ---
 
-# 15. Why Companies Use Docker Compose
+# 🏢 Why Companies Use Docker Compose
 
-Because it:
-- Simplifies multi-container setup
+Docker Compose:
+- Simplifies multi-container management
 - Centralizes configuration
 - Improves local development
-- Reduces manual commands
+- Reduces manual setup
 
 Used heavily for:
 - Backend development
@@ -1246,11 +1196,11 @@ Used heavily for:
 
 ---
 
-# 16. Compose vs Manual Docker
+# ⚖️ Manual Docker vs Docker Compose
 
 | Without Compose | With Compose |
 |---|---|
-| Many commands | One file |
+| Many commands | Single file |
 | Manual network creation | Automatic |
 | Manual container startup | Automatic |
 | Hard to manage | Easy |
@@ -1258,7 +1208,7 @@ Used heavily for:
 
 ---
 
-# 17. Final Mental Model
+# 🧠 Final Mental Model
 
 ```text
 Docker Compose
@@ -1274,7 +1224,7 @@ Connects containers together
 
 ---
 
-# 18. Most Important Understanding
+# 📌 Most Important Understanding
 
 ```text
 Docker Network
@@ -1283,111 +1233,14 @@ Container communication
 
 Docker Compose
     ↓
-Container management/orchestration
+Container orchestration/management
 ```
 
 ---
 
-# 19. One-Line Interview Answer
-
-Docker Compose is a tool used to define and manage multi-container Docker applications using a YAML configuration file.
+# 🚀 Docker Hub Flow
 
 ---
-
-# 22. Explicit Network in Compose (Advanced)
-
-```yaml
-version: "3"
-
-services:
-
-  app:
-    build: .
-    networks:
-      - backend
-
-  mongo:
-    image: mongo
-    networks:
-      - backend
-
-networks:
-  backend:
-```
-
----
-
-# Meaning
-
-Compose explicitly creates:
-
-```text
-backend network
-```
-
----
-
-# 23. Full Real-World Flow
-
-## Step 1
-
-Create:
-
-```text
-Dockerfile
-```
-
----
-
-## Step 2
-
-Build image:
-
-```bash
-docker build -t zomato:v1 .
-```
-
----
-
-## Step 3
-
-Create Compose file:
-
-```text
-docker-compose.yml
-```
-
----
-
-## Step 4
-
-Run:
-
-```bash
-docker-compose up
-```
-
----
-
-# Final Architecture
-
-```text
-Browser
-   ↓
-Node.js Container
-   ↓
-MongoDB Container
-```
-
-Connected via:
-
-```text
-Docker Network
-```
-
----
-
-# 24. Docker Hub Flow
 
 ## Build Image
 
@@ -1437,20 +1290,20 @@ docker run username/zomato:v1
 
 ---
 
-# 25. FINAL MOST IMPORTANT UNDERSTANDING
+# 📌 Final Summary
 
-```text
-Image = packaged app
-Container = running app
-Dockerfile = build instructions
-Volume = persistent storage
-Network = container communication
-Compose = manage multiple containers together
-```
+| Concept | Meaning |
+|---|---|
+| Image | Packaged application blueprint |
+| Container | Running application |
+| Dockerfile | Instructions to build image |
+| Volume | Persistent storage |
+| Network | Communication layer |
+| Docker Compose | Multi-container orchestration |
 
 ---
 
-# 26. FINAL INTERVIEW ONE-LINERS
+# 🎯 Interview One-Liners
 
 ## Docker
 
@@ -1472,7 +1325,7 @@ A container is a running instance of an image.
 
 ## Volume
 
-Volumes provide persistent storage outside container lifecycle.
+Volumes provide persistent storage outside the container lifecycle.
 
 ---
 
