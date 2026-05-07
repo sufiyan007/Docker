@@ -1,4 +1,4 @@
-# 🚀 Docker Mastery Notes
+# 🚀 Docker  Notes
 
 ---
 
@@ -146,7 +146,7 @@ Running Container
 ---
 
 <details>
-<summary><h1>🛠 Docker Commands Mastery</h1></summary>
+<summary><h1>🛠 Docker Commands </h1></summary>
 
 <br>
 
@@ -553,7 +553,7 @@ env
 ---
 
 <details>
-<summary><h1>💾 Docker Volumes Mastery</h1></summary>
+<summary><h1>💾 Docker Volumes </h1></summary>
 
 <br>
 
@@ -626,7 +626,7 @@ Local folder ↔ container folder sync
 ---
 
 <details>
-<summary><h1>🌐 Docker Network Mastery</h1></summary>
+<summary><h1>🌐 Docker Network </h1></summary>
 
 <br>
 
@@ -732,7 +732,7 @@ docker network prune
 ---
 
 <details>
-<summary><h1>🧩 Docker Compose Mastery</h1></summary>
+<summary><h1>🧩 Docker Compose </h1></summary>
 
 <br>
 
@@ -1249,7 +1249,7 @@ docker run username/zomato:v1
 ---
 
 <details>
-<summary><h1>🐳 Dockerfile Mastery</h1></summary>
+<summary><h1>🐳 Dockerfile </h1></summary>
 
 <br>
 
