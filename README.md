@@ -1718,12 +1718,15 @@ Running application
 ---
 
 
-# 🚀 Advanced Dockerfile Concepts
-
 ---
 
-<details open>
-<summary><h1>🏗 Multi-Stage Builds</h1></summary>
+<details>
+<summary><h1>🚀 Advanced Dockerfile Concepts</h1></summary>
+
+<br>
+
+<details>
+<summary><h2>🏗 Multi-Stage Builds</h2></summary>
 
 <br>
 
@@ -1893,7 +1896,7 @@ Because it gives:
 ---
 
 <details>
-<summary><h1>⚡ Docker Layer Caching</h1></summary>
+<summary><h2>⚡ Docker Layer Caching</h2></summary>
 
 <br>
 
@@ -2024,7 +2027,7 @@ Huge productivity improvement.
 ---
 
 <details>
-<summary><h1>🚫 .dockerignore</h1></summary>
+<summary><h2>🚫 .dockerignore</h2></summary>
 
 <br>
 
@@ -2132,7 +2135,7 @@ Because it:
 ---
 
 <details>
-<summary><h1>📦 Base Image Selection (alpine vs slim vs full)</h1></summary>
+<summary><h2>📦 Base Image Selection (alpine vs slim vs full)</h2></summary>
 
 <br>
 
@@ -2253,5 +2256,63 @@ Especially with:
 - Python bindings
 - binaries
 - native Node modules
+
+---
+
+# 🏢 Industry Reality
+
+| Image | Common Usage |
+|---|---|
+| node:18 | development |
+| node:18-slim | most production applications |
+| node:18-alpine | ultra optimized applications |
+
+---
+
+# 🚀 Final Understanding
+
+Base image selection is about:
+
+```text
+Optimizing Docker images for production
+```
+
+</details>
+
+---
+
+<details>
+<summary><h2>🎯 Final Simple Understanding</h2></summary>
+
+<br>
+
+# 🚀 Beginner Docker vs Advanced Docker
+
+Beginner Docker focuses on:
+
+```text
+"How to run application"
+```
+
+Advanced Docker focuses on:
+
+```text
+"How to run application efficiently in production"
+```
+
+---
+
+# 📌 Final Summary
+
+| Topic | Purpose |
+|---|---|
+| Multi-stage builds | smaller production images |
+| Layer caching | faster Docker builds |
+| .dockerignore | avoid unnecessary files |
+| Base image selection | optimize image size/performance |
+
+</details>
+
+</details>
 
 ---
