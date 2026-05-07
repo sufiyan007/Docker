@@ -1,6 +1,11 @@
-# 🚀 Docker 
+# 🚀 Docker Mastery Notes
 
 ---
+
+<details open>
+<summary><h1>📌 Docker Fundamentals</h1></summary>
+
+<br>
 
 # 📌 What is Docker?
 
@@ -20,8 +25,6 @@ Build once, run anywhere
 ---
 
 # 🤔 Why Docker is Needed
-
-## Problem Without Docker
 
 In real-world projects, applications often work on a developer machine but fail on another system.
 
@@ -44,11 +47,7 @@ Result:
 Application crash or unexpected behavior
 ```
 
----
-
-## Docker Solution
-
-Docker packages:
+Docker solves this problem by packaging:
 - Application code
 - Runtime
 - Dependencies
@@ -66,11 +65,9 @@ Same behavior everywhere
 
 # 🧱 Core Docker Concepts
 
----
-
 ## 📦 Docker Image
 
-A Docker image is a **blueprint/template** used to create containers.
+A Docker image is a blueprint/template used to create containers.
 
 An image contains:
 - Application code
@@ -84,7 +81,7 @@ Think of it like:
 Image = Blueprint
 ```
 
-Example:
+Examples:
 - Node.js image
 - MongoDB image
 - Nginx image
@@ -93,7 +90,7 @@ Example:
 
 ## 📦 Docker Container
 
-A container is a **running instance** of an image.
+A container is a running instance of an image.
 
 Think:
 
@@ -144,7 +141,14 @@ docker run
 Running Container
 ```
 
+</details>
+
 ---
+
+<details>
+<summary><h1>🛠 Docker Commands Mastery</h1></summary>
+
+<br>
 
 # 🛠 docker build
 
@@ -154,10 +158,6 @@ Running Container
 docker build -t zomato:v1 .
 ```
 
----
-
-## What This Command Does
-
 This command:
 - Reads the Dockerfile
 - Executes instructions
@@ -165,7 +165,7 @@ This command:
 
 ---
 
-## Understanding `-t`
+## Understanding -t
 
 ```text
 -t = tag
@@ -178,8 +178,8 @@ docker build -t zomato:v1 .
 ```
 
 Here:
-- `zomato` → image name
-- `v1` → version/tag
+- zomato → image name
+- v1 → version/tag
 
 ---
 
@@ -221,10 +221,7 @@ If NOT:
 docker pull nginx
 ```
 
----
-
-## Purpose
-
+Purpose:
 Downloads an existing image from Docker Hub.
 
 ---
@@ -255,10 +252,7 @@ docker pull = ordering food
 docker run zomato:v1
 ```
 
----
-
-## Purpose
-
+Purpose:
 Creates and starts a Docker container.
 
 ---
@@ -287,9 +281,7 @@ Container
 docker run -d zomato:v1
 ```
 
----
-
-## Meaning
+Meaning:
 
 ```text
 -d = detached mode
@@ -297,23 +289,15 @@ docker run -d zomato:v1
 
 This runs the container in the background.
 
----
-
-## Without `-d`
-
+Without `-d`:
 - Terminal gets blocked
 - Logs continuously appear
 
----
-
-## With `-d`
-
+With `-d`:
 - Container runs silently in background
 - Terminal becomes free
 
----
-
-## Example
+Example:
 
 ```bash
 docker run -d mongo
@@ -331,9 +315,7 @@ MongoDB now runs in the background.
 docker run -p 3000:3000 zomato:v1
 ```
 
----
-
-## Meaning
+Meaning:
 
 ```text
 host_port:container_port
@@ -341,7 +323,7 @@ host_port:container_port
 
 ---
 
-# 🔄 Request Flow
+## Request Flow
 
 ```text
 Browser
@@ -351,9 +333,7 @@ localhost:3000
 container:3000
 ```
 
----
-
-## Another Example
+Another Example:
 
 ```bash
 docker run -p 8080:3000 zomato:v1
@@ -381,10 +361,7 @@ container:3000
 docker run -e PORT=3000 zomato:v1
 ```
 
----
-
-## Purpose
-
+Purpose:
 Pass runtime configuration into the container.
 
 ---
@@ -397,7 +374,7 @@ const port = process.env.PORT;
 
 ---
 
-# 🔄 How Environment Variables Work
+## How Environment Variables Work
 
 ```text
 docker run -e KEY=value
@@ -407,9 +384,7 @@ Docker injects environment variable
 Node.js reads using process.env
 ```
 
----
-
-## Example
+Example:
 
 ```bash
 docker run \
@@ -418,9 +393,7 @@ docker run \
 zomato:v1
 ```
 
----
-
-## Inside Application
+Inside application:
 
 ```js
 process.env.PORT
@@ -470,8 +443,6 @@ Shows:
 
 # ⚙️ ps -aef vs docker ps
 
----
-
 ## ps -aef
 
 Linux OS command.
@@ -504,15 +475,10 @@ Docker containers
 docker logs zomato-app
 ```
 
----
-
-## Purpose
-
+Purpose:
 Shows application logs/output from container.
 
----
-
-## Example
+Example:
 
 ```js
 console.log("Server started");
@@ -542,16 +508,10 @@ docker logs -f zomato-app
 docker inspect zomato-app
 ```
 
----
-
-## Purpose
-
+Purpose:
 Provides detailed metadata/configuration of container.
 
----
-
-## Information Shown
-
+Information shown:
 - IP address
 - Environment variables
 - Port mappings
@@ -568,10 +528,7 @@ Provides detailed metadata/configuration of container.
 docker exec -it zomato-app /bin/bash
 ```
 
----
-
-## Purpose
-
+Purpose:
 Allows entering inside a running container interactively.
 
 ---
@@ -583,11 +540,7 @@ Allows entering inside a running container interactively.
 | -i | Interactive mode |
 | -t | Terminal |
 
----
-
-## Inside Container
-
-You can run commands like:
+Inside container you can run:
 
 ```bash
 ls
@@ -595,13 +548,16 @@ pwd
 env
 ```
 
+</details>
+
 ---
+
+<details>
+<summary><h1>💾 Docker Volumes Mastery</h1></summary>
+
+<br>
 
 # 💾 Docker Volumes
-
----
-
-## Problem
 
 Containers are temporary.
 
@@ -611,15 +567,11 @@ If a MongoDB container gets deleted:
 Database data also gets deleted
 ```
 
----
-
-## Solution
-
-Docker volumes store data outside the container lifecycle.
+Docker volumes solve this problem by storing data outside container lifecycle.
 
 ---
 
-## Example
+# 📌 Example
 
 ```bash
 docker run -v mongo-data:/data/db mongo
@@ -627,7 +579,7 @@ docker run -v mongo-data:/data/db mongo
 
 ---
 
-## Understanding Volume Mapping
+# 📖 Understanding Volume Mapping
 
 | Part | Meaning |
 |---|---|
@@ -657,21 +609,26 @@ Data survives container deletion
 
 ---
 
-## Development Example
+# 💻 Development Example
 
 ```bash
 docker run -v $(pwd):/app zomato:v1
 ```
 
----
-
-## Meaning
+Meaning:
 
 ```text
 Local folder ↔ container folder sync
 ```
 
+</details>
+
 ---
+
+<details>
+<summary><h1>🌐 Docker Network Mastery</h1></summary>
+
+<br>
 
 # 🌐 Docker Network
 
@@ -726,7 +683,7 @@ mongodb://mongo:27017
 
 ---
 
-## Why `mongo`?
+## Why mongo?
 
 Because:
 
@@ -770,9 +727,18 @@ docker network rm my-network
 docker network prune
 ```
 
+</details>
+
 ---
 
+<details>
+<summary><h1>🧩 Docker Compose Mastery</h1></summary>
+
+<br>
+
 # 🧩 Docker Compose
+
+Docker Compose is used to manage multiple containers together using a single YAML file.
 
 ---
 
@@ -830,19 +796,11 @@ NO.
 
 Docker Compose is NOT a network.
 
----
-
-# 📌 Docker Compose Responsibilities
-
 Docker Compose:
 - Creates containers
 - Builds images
 - Creates networks automatically
 - Connects containers automatically
-
----
-
-# 📌 Docker Network Responsibility
 
 Docker Network handles:
 
@@ -866,9 +824,7 @@ zomato/
 
 # 🚀 Full Docker Compose Flow
 
----
-
-# STEP 1 — Existing Node.js Project
+## STEP 1 — Existing Node.js Project
 
 Suppose your backend already exists:
 
@@ -879,7 +835,7 @@ package.json
 
 ---
 
-# STEP 2 — Create Dockerfile
+## STEP 2 — Create Dockerfile
 
 Create:
 
@@ -920,7 +876,7 @@ CMD ["node", "app.js"]
 
 ---
 
-# STEP 3 — Create docker-compose.yml
+## STEP 3 — Create docker-compose.yml
 
 Create:
 
@@ -951,8 +907,6 @@ services:
 ---
 
 # 📖 Understanding docker-compose.yml
-
----
 
 ## version
 
@@ -1093,9 +1047,7 @@ Inside app.js:
 mongodb://mongo:27017
 ```
 
----
-
-## Why `mongo`?
+Why `mongo`?
 
 Because:
 
@@ -1118,13 +1070,12 @@ docker-compose up
 # ⚙️ What Happens Internally?
 
 Docker Compose automatically:
-
-✅ Builds Node.js image  
-✅ Pulls MongoDB image  
-✅ Creates containers  
-✅ Creates network  
-✅ Connects containers  
-✅ Starts application  
+- Builds Node.js image
+- Pulls MongoDB image
+- Creates containers
+- Creates network
+- Connects containers
+- Starts application
 
 ---
 
@@ -1236,11 +1187,16 @@ Docker Compose
 Container orchestration/management
 ```
 
+</details>
+
 ---
+
+<details>
+<summary><h1>🚀 Docker Hub Flow</h1></summary>
+
+<br>
 
 # 🚀 Docker Hub Flow
-
----
 
 ## Build Image
 
@@ -1287,6 +1243,8 @@ docker pull username/zomato:v1
 ```bash
 docker run username/zomato:v1
 ```
+
+</details>
 
 ---
 
