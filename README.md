@@ -1716,3 +1716,542 @@ Running application
 </details>
 
 ---
+
+
+# 🚀 Advanced Dockerfile Concepts
+
+---
+
+<details open>
+<summary><h1>🏗 Multi-Stage Builds</h1></summary>
+
+<br>
+
+# 🚀 What Problem Does Multi-Stage Build Solve?
+
+Suppose your Node.js project contains:
+
+```text
+Source code
+TypeScript
+npm
+dev dependencies
+build tools
+temporary files
+```
+
+When you create Docker image normally:
+
+```dockerfile
+FROM node:18
+
+WORKDIR /app
+
+COPY . .
+
+RUN npm install
+
+CMD ["node", "app.js"]
+```
+
+your final image contains EVERYTHING:
+- app code
+- node_modules
+- npm
+- development tools
+- temporary files
+
+Result:
+
+```text
+Very large Docker image
+```
+
+Sometimes:
+- 800MB
+- 1GB
+
+This is bad for:
+- deployments
+- cloud cost
+- startup speed
+
+---
+
+# ✅ Multi-Stage Build Solution
+
+Docker says:
+
+```text
+"Let's use one container for building
+and another clean container for running."
+```
+
+---
+
+# 🧠 Real-Life Analogy
+
+Suppose you cook food.
+
+Kitchen contains:
+- utensils
+- vegetables
+- gas
+- packets
+- garbage
+
+But when serving customer:
+you only give:
+
+```text
+Final food
+```
+
+Correct?
+
+Same idea in Docker.
+
+---
+
+# 📝 Example
+
+```dockerfile
+# Stage 1 → Build Stage
+FROM node:18 AS builder
+
+WORKDIR /app
+
+COPY . .
+
+RUN npm install
+
+# Stage 2 → Production Stage
+FROM node:18-alpine
+
+WORKDIR /app
+
+COPY --from=builder /app .
+
+CMD ["node", "app.js"]
+```
+
+---
+
+# ⚙️ What Happens Internally?
+
+## Stage 1
+
+Docker creates temporary container.
+
+Used for:
+- npm install
+- build process
+- compiling
+
+---
+
+## Stage 2
+
+Docker creates NEW clean lightweight container.
+
+Only copies:
+
+```text
+Final ready application
+```
+
+NOT:
+- temporary files
+- build cache
+- extra tooling
+
+---
+
+# 🚀 Result
+
+Much smaller image.
+
+Example:
+
+```text
+Before → 900MB
+After  → 150MB
+```
+
+---
+
+# 🏢 Why Companies Use Multi-Stage Builds
+
+Because it gives:
+- faster deployments
+- lower storage usage
+- lower cloud cost
+- better security
+
+</details>
+
+---
+
+<details>
+<summary><h1>⚡ Docker Layer Caching</h1></summary>
+
+<br>
+
+# 🚀 What is Layer Caching?
+
+Docker builds images:
+
+```text
+Layer by layer
+```
+
+Think of Docker image like stack of layers.
+
+---
+
+# 📝 Example
+
+```dockerfile
+FROM node:18
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+CMD ["node", "app.js"]
+```
+
+---
+
+# ⚙️ Internally Docker Creates Layers
+
+```text
+Layer 1 → FROM
+Layer 2 → WORKDIR
+Layer 3 → COPY package.json
+Layer 4 → RUN npm install
+Layer 5 → COPY source code
+```
+
+Docker stores every layer separately.
+
+---
+
+# 🤔 Why is this Powerful?
+
+Suppose tomorrow:
+you only change:
+
+```text
+app.js
+```
+
+Did package.json change?
+
+NO.
+
+So Docker says:
+
+```text
+"No need to rerun npm install"
+```
+
+Docker reuses old cached layer.
+
+---
+
+# 🚀 Huge Benefit
+
+Without caching:
+
+```text
+npm install runs every build
+```
+
+Very slow.
+
+---
+
+# ✅ With Layer Caching
+
+```text
+Only changed layers rebuild
+```
+
+Very fast.
+
+---
+
+# 🎯 This is Why Industry Uses This Pattern
+
+```dockerfile
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+```
+
+instead of:
+
+```dockerfile
+COPY . .
+
+RUN npm install
+```
+
+---
+
+# 🚀 Why This Optimization Matters
+
+Suppose:
+- npm install takes 3 minutes
+
+Without caching:
+every small code change triggers npm install again.
+
+With caching:
+Docker skips unnecessary work.
+
+Huge productivity improvement.
+
+</details>
+
+---
+
+<details>
+<summary><h1>🚫 .dockerignore</h1></summary>
+
+<br>
+
+# 🚀 What Problem Does .dockerignore Solve?
+
+Suppose your project contains:
+
+```text
+node_modules
+.git
+.env
+logs
+videos
+```
+
+When Docker runs:
+
+```dockerfile
+COPY . .
+```
+
+Docker copies EVERYTHING into image.
+
+Including useless files.
+
+---
+
+# ❌ Problems Without .dockerignore
+
+- huge Docker image
+- slower builds
+- security risks
+- unnecessary files inside container
+
+---
+
+# ✅ Solution → .dockerignore
+
+Create file:
+
+```text
+.dockerignore
+```
+
+Example:
+
+```text
+node_modules
+.git
+.env
+logs
+```
+
+---
+
+# ⚙️ What Happens Internally?
+
+Docker says:
+
+```text
+"Ignore these files while building image"
+```
+
+---
+
+# 🧠 Similar To
+
+```text
+.gitignore
+```
+
+Same concept.
+
+---
+
+# 🚨 VERY IMPORTANT
+
+Never copy:
+
+```text
+.env
+```
+
+inside production Docker images.
+
+Because:
+- passwords may leak
+- secrets may leak
+- API keys may leak
+
+Huge security risk.
+
+---
+
+# 🚀 Why Companies Use .dockerignore
+
+Because it:
+- reduces image size
+- improves build speed
+- improves security
+- removes unnecessary files
+
+</details>
+
+---
+
+<details>
+<summary><h1>📦 Base Image Selection (alpine vs slim vs full)</h1></summary>
+
+<br>
+
+# 🚀 What is Base Image Selection?
+
+This:
+
+```dockerfile
+FROM node:18
+```
+
+is NOT the only Node.js image.
+
+Docker Hub provides multiple variants.
+
+Examples:
+- node:18
+- node:18-slim
+- node:18-alpine
+
+---
+
+# 🤔 Why Different Images Exist?
+
+Because every project has different needs.
+
+Some applications need:
+- more tools
+- debugging utilities
+- full Linux packages
+
+Some need:
+- lightweight images
+- smaller deployments
+- faster startup
+
+---
+
+# 🧠 Real-Life Analogy
+
+Think like mobile phones.
+
+Some phones are:
+- heavy but powerful
+
+Some are:
+- lightweight but minimal
+
+Same idea.
+
+---
+
+# 📦 node:18
+
+Full image.
+
+Contains:
+- many Linux packages
+- debugging tools
+- utilities
+
+Good for:
+
+```text
+Beginners
+Development
+```
+
+BUT:
+- very large image size
+
+---
+
+# 📦 node:18-slim
+
+Smaller version.
+
+Removes unnecessary packages.
+
+Good balance:
+
+```text
+Smaller + stable
+```
+
+Used heavily in production.
+
+---
+
+# 📦 node:18-alpine
+
+Ultra lightweight version.
+
+Uses Alpine Linux.
+
+Very small image size.
+
+Example:
+
+```text
+node:18        → 900MB
+node:18-slim   → 250MB
+node:18-alpine → 100MB
+```
+
+Huge difference.
+
+---
+
+# 🤔 Why Not Always Use Alpine?
+
+Because Alpine sometimes causes:
+- dependency issues
+- package compatibility issues
+- native module problems
+
+Especially with:
+- Python bindings
+- binaries
+- native Node modules
+
+---
