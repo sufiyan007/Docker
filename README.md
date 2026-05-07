@@ -2316,3 +2316,601 @@ Advanced Docker focuses on:
 </details>
 
 ---
+
+
+---
+
+<details>
+<summary><h1>🚀 Real Backend Integration Using Docker</h1></summary>
+
+<br>
+
+# 🚀 Moving From Docker Commands → Real Backend Development
+
+Now we move from:
+
+```text
+Learning Docker commands
+```
+
+to:
+
+```text
+Using Docker in REAL backend projects
+```
+
+This is what companies actually expect from backend developers.
+
+---
+
+# 🏗 Real-World Example
+
+Suppose you built:
+
+```text
+Zomato Backend
+```
+
+Tech stack:
+- Node.js
+- Express.js
+- MongoDB
+
+Project structure:
+
+```text
+zomato/
+ ├── app.js
+ ├── package.json
+ ├── .env
+ ├── Dockerfile
+ └── docker-compose.yml
+```
+
+Goal:
+
+```text
+Run complete backend using Docker
+```
+
+INCLUDING:
+- backend app
+- database
+- networking
+- environment variables
+
+---
+
+<details>
+<summary><h2>📝 STEP 1 — Existing Backend Application</h2></summary>
+
+<br>
+
+Suppose your `app.js` looks like this:
+
+```js
+const express = require("express");
+const mongoose = require("mongoose");
+
+const app = express();
+
+const PORT = process.env.PORT;
+const DB_URL = process.env.DB_URL;
+
+mongoose.connect(DB_URL)
+.then(() => console.log("MongoDB Connected"));
+
+app.get("/", (req, res) => {
+  res.send("Zomato Backend Running");
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on ${PORT}`);
+});
+```
+
+---
+
+# 🧠 Important Understanding
+
+Notice:
+
+```js
+process.env.PORT
+process.env.DB_URL
+```
+
+This means:
+
+```text
+Application expects values from environment variables
+```
+
+NOT hardcoded values.
+
+This is VERY important in real-world backend systems.
+
+</details>
+
+---
+
+<details>
+<summary><h2>🐳 STEP 2 — Create Dockerfile</h2></summary>
+
+<br>
+
+Create:
+
+```text
+Dockerfile
+```
+
+Write:
+
+```dockerfile
+FROM node:18
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+EXPOSE 3000
+
+CMD ["node", "app.js"]
+```
+
+---
+
+# 🧠 What This Dockerfile Does
+
+Docker internally:
+
+1. Downloads Node.js environment from Docker Hub
+2. Creates `/app` folder
+3. Copies package.json
+4. Installs dependencies
+5. Copies full source code
+6. Declares port 3000
+7. Starts Node.js application
+
+</details>
+
+---
+
+<details>
+<summary><h2>🧩 STEP 3 — Why Docker Compose is Needed</h2></summary>
+
+<br>
+
+Now think carefully.
+
+Your backend needs:
+- Node.js container
+- MongoDB container
+
+That means:
+
+```text
+Multiple containers
+```
+
+Managing manually becomes messy.
+
+Without Docker Compose:
+
+```bash
+docker network create zomato-network
+
+docker run -d \
+--name mongo \
+--network zomato-network \
+mongo
+
+docker build -t zomato:v1 .
+
+docker run -d \
+--name zomato-app \
+--network zomato-network \
+-p 3000:3000 \
+zomato:v1
+```
+
+Too many commands.
+
+Hard to maintain.
+
+So we use:
+
+```text
+docker-compose.yml
+```
+
+</details>
+
+---
+
+<details>
+<summary><h2>📄 STEP 4 — Create docker-compose.yml</h2></summary>
+
+<br>
+
+Create:
+
+```text
+docker-compose.yml
+```
+
+Write:
+
+```yaml
+version: "3"
+
+services:
+
+  app:
+    build: .
+    container_name: zomato-app
+
+    ports:
+      - "3000:3000"
+
+    environment:
+      PORT: 3000
+      DB_URL: mongodb://mongo:27017/zomato
+
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo
+    container_name: mongo
+
+    ports:
+      - "27017:27017"
+```
+
+</details>
+
+---
+
+<details>
+<summary><h2>⚙️ Understanding docker-compose.yml Internally</h2></summary>
+
+<br>
+
+# 🔹 app Service
+
+```yaml
+app:
+```
+
+This creates:
+
+```text
+Node.js container
+```
+
+---
+
+# 🔹 build: .
+
+```yaml
+build: .
+```
+
+Means:
+
+```text
+Use Dockerfile from current folder
+```
+
+Equivalent to:
+
+```bash
+docker build -t app-image .
+```
+
+---
+
+# 🔹 ports
+
+```yaml
+ports:
+  - "3000:3000"
+```
+
+Meaning:
+
+```text
+Laptop port 3000
+        ↓
+Container port 3000
+```
+
+Now browser can access:
+
+```text
+localhost:3000
+```
+
+---
+
+# 🔹 environment
+
+```yaml
+environment:
+  PORT: 3000
+  DB_URL: mongodb://mongo:27017/zomato
+```
+
+Docker injects environment variables inside container.
+
+Equivalent to:
+
+```bash
+docker run -e PORT=3000
+```
+
+---
+
+# 🧠 VERY IMPORTANT
+
+Inside Node.js:
+
+```js
+process.env.PORT
+process.env.DB_URL
+```
+
+reads these values.
+
+---
+
+# 🔹 DB_URL Understanding
+
+```text
+mongodb://mongo:27017/zomato
+```
+
+Break it:
+
+| Part | Meaning |
+|---|---|
+| mongo | MongoDB container name |
+| 27017 | MongoDB port |
+| zomato | database name |
+
+---
+
+# 🚨 MOST IMPORTANT UNDERSTANDING
+
+Why:
+
+```text
+mongo
+```
+
+instead of:
+
+```text
+localhost
+```
+
+Because:
+
+```text
+Inside container,
+localhost means SAME container itself
+```
+
+NOT another container.
+
+---
+
+# 🌐 Docker Compose Network Understanding
+
+Docker Compose automatically creates network.
+
+Both containers join same network.
+
+So:
+
+```text
+app container
+      ↓
+can talk to
+      ↓
+mongo container
+```
+
+using:
+
+```text
+container/service name
+```
+
+---
+
+# 🔹 depends_on
+
+```yaml
+depends_on:
+  - mongo
+```
+
+Means:
+
+```text
+Start mongo container before app container
+```
+
+Very common production practice.
+
+---
+
+# 🔹 mongo Service
+
+```yaml
+mongo:
+```
+
+Creates MongoDB container.
+
+---
+
+# 🔹 image: mongo
+
+```yaml
+image: mongo
+```
+
+Docker downloads official MongoDB image from Docker Hub.
+
+Equivalent to:
+
+```bash
+docker pull mongo
+```
+
+</details>
+
+---
+
+<details>
+<summary><h2>▶️ STEP 5 — Run Everything</h2></summary>
+
+<br>
+
+Run:
+
+```bash
+docker-compose up
+```
+
+---
+
+# ⚙️ What Happens Internally?
+
+Docker Compose:
+
+---
+
+## 1️⃣ Creates Network Automatically
+
+Example:
+
+```text
+zomato_default
+```
+
+---
+
+## 2️⃣ Pulls MongoDB Image
+
+Downloads official MongoDB image from Docker Hub.
+
+---
+
+## 3️⃣ Builds Node.js Image
+
+Uses Dockerfile to build application image.
+
+---
+
+## 4️⃣ Creates MongoDB Container
+
+MongoDB container starts.
+
+---
+
+## 5️⃣ Creates Node.js Container
+
+Backend container starts.
+
+---
+
+## 6️⃣ Injects Environment Variables
+
+PORT and DB_URL become available inside container.
+
+---
+
+## 7️⃣ Connects Containers To Same Network
+
+Now both containers can communicate.
+
+---
+
+## 8️⃣ Starts Application
+
+Node.js backend starts successfully.
+
+</details>
+
+---
+
+<details>
+<summary><h2>🏗 Final Architecture</h2></summary>
+
+<br>
+
+```text
+Browser
+   ↓
+localhost:3000
+   ↓
+Node.js Container
+   ↓
+MongoDB Container
+```
+
+Connected using Docker Network.
+
+</details>
+
+---
+
+<details>
+<summary><h2>🎯 Most Important Backend Developer Understanding</h2></summary>
+
+<br>
+
+As backend developer,
+you should know:
+
+| Concept | Why Important |
+|---|---|
+| Dockerfile | package backend app |
+| Environment variables | configurable runtime |
+| Port mapping | browser access |
+| Docker network | container communication |
+| Docker Compose | manage multiple containers |
+| MongoDB container | database setup |
+
+---
+
+# 🚀 What Companies Actually Expect
+
+Not:
+
+```text
+Memorize Docker commands
+```
+
+They expect:
+
+```text
+Can you run real backend systems properly using Docker?
+```
+
+That is the REAL backend developer skill.
+
+</details>
+
+</details>
+
+---
