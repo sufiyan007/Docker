@@ -2794,9 +2794,11 @@ Node.js backend starts successfully.
 
 </details>
 
----
+</details>
 
 ---
+
+
 
 <details>
 <summary><h1>🛠 Docker Debugging Mindset </h1></summary>
